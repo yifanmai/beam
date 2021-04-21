@@ -37,8 +37,8 @@ class PipelineContextTest(unittest.TestCase):
 
   def test_deduplication_by_proto(self):
     context = pipeline_context.PipelineContext()
-    env_proto = environments.SubprocessSDKEnvironment(
-        command_string="foo").to_runner_api(None)
+    env_proto = environments.SubprocessSDKEnvironment.from_command_string(
+        "foo").to_runner_api(None)
     env_ref_1 = context.environments.get_by_proto(env_proto)
     env_ref_2 = context.environments.get_by_proto(env_proto, deduplicate=True)
     self.assertEqual(env_ref_1, env_ref_2)
@@ -47,7 +47,7 @@ class PipelineContextTest(unittest.TestCase):
       self):
     context = pipeline_context.PipelineContext()
 
-    env = environments.SubprocessSDKEnvironment(command_string="foo")
+    env = environments.SubprocessSDKEnvironment.from_command_string("foo")
     env_proto = env.to_runner_api(None)
     id_from_proto = context.environments.get_by_proto(env_proto)
     id_from_obj = context.environments.get_id(env)
@@ -55,7 +55,7 @@ class PipelineContextTest(unittest.TestCase):
     self.assertEqual(
         context.environments.get_by_id(id_from_obj).command_string, "foo")
 
-    env = environments.SubprocessSDKEnvironment(command_string="bar")
+    env = environments.SubprocessSDKEnvironment.from_command_string("bar")
     env_proto = env.to_runner_api(None)
     id_from_obj = context.environments.get_id(env)
     id_from_proto = context.environments.get_by_proto(
